@@ -8,8 +8,8 @@
 
 (defroutes app-routes
   (GET "/run" []
-    (println "RUN 1")
-    (response {:message "Hello World"})) ; TODO: "Hello World" -> (run)
+    (println "RUN 3")
+    (response {:message (run)})) ; TODO: "Hello World" -> (run)
 
   (route/not-found
    (response/not-found {:message "Not Found"})))
