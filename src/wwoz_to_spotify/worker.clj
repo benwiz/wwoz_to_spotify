@@ -4,4 +4,4 @@
   "Start the whole thing."
   []
   (println "running...")
-  "Hi, from the worker!")
+  nil)
