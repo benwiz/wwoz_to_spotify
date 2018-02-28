@@ -9,5 +9,10 @@ lein lambda deploy production
 ## To Do
 
 - Consume WWOZ's Spinitron RSS feed
+  - https://github.com/benwiz/wwoz-spintron-api/blob/master/src/wwoz_spintron_api/core.clj
 - Find each song on Spotify
-- Add the song to a specific playlist if that song is not already on that playlist
+  - https://developer.spotify.com/web-api/search-item/
+- Check the songs that are already on the playlist against the new songs
+  - https://developer.spotify.com/web-api/get-playlists-tracks/
+- Add only songs that are not already in playlist
+  - https://developer.spotify.com/web-api/add-tracks-to-playlist/
