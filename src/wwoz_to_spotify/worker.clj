@@ -1,4 +1,4 @@
-(ns wwoz_to_spotify_playlist.worker)
+(ns wwoz_to_spotify.worker)
 
 (defn run
   "Start the whole thing."

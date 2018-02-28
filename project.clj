@@ -16,7 +16,7 @@
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.1"]]}
    :uberjar {:aot :all}}
-  :lambda {:function {:name "wwoz_to_spotify"
+  :lambda {:function {:name "wwoz-to-spotify" ; because bucket name cannot contain underscores
                       :handler "wwoz_to_spotify.lambda.LambdaFn"}
            :api-gateway {:name "wwoz_to_spotify"}
            :stages {"production" {:warmup {:enable true}}

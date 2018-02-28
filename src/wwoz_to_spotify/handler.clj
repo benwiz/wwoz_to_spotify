@@ -6,11 +6,12 @@
             [ring.middleware.json :refer [wrap-json-response]]))
 
 (defroutes app-routes
-  (GET "/hello" []
+  (GET "/run" []
+    (println "hi!!!")
     (response {:message "Hello World"}))
 
   (route/not-found
-    (response/not-found {:message "Not Found"})))
+   (response/not-found {:message "Not Found"})))
 
 (def app
   (-> app-routes

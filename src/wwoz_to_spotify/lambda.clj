@@ -5,7 +5,7 @@
             [cheshire.core :as cheshire]
             [wwoz_to_spotify.handler :refer [app]]))
 
-(def lambda-handler (wrap-apigw-lambda-proxy app {:scheduled-event-route "/warmup"}))
+(def lambda-handler (wrap-apigw-lambda-proxy app {:scheduled-event-route "/run"}))
 
 (deflambdafn wwoz_to_spotify.lambda.LambdaFn [in out ctx]
   (with-open [writer (io/writer out)]
