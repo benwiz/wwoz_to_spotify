@@ -8,7 +8,7 @@
 
 (defroutes app-routes
   (GET "/run" []
-    (println "RUN 4")
+    (println "GET /run")
     (response {:message (run)}))
 
   (route/not-found
