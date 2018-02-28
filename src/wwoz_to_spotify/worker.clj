@@ -4,4 +4,4 @@
   "Start the whole thing."
   []
   (println "running...")
-  "Hello world!!")
+  "Hi, from the worker!")
