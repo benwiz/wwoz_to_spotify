@@ -10,6 +10,6 @@
 (defn run
   "Start the whole thing."
   []
-  (println "running...")
+  (println "Run...")
   (wwoz-to-spotify)
   nil)
