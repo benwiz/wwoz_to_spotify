@@ -14,6 +14,8 @@ lein run
 
 ## To Do
 
+- Look into: https://github.com/blmstrm/clj-spotify
+
 - Find each song on Spotify
   - https://developer.spotify.com/web-api/search-item/
 - Check the songs that are already on the playlist against the new songs
