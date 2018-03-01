@@ -3,7 +3,7 @@
 
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
-  Clean evelope and each entry."
+  Clean envelope and each entry."
   [feed]
   (let [cleaner-feed (update feed :published str)]
     (update cleaner-feed :entries
