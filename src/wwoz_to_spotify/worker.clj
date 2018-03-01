@@ -1,5 +1,6 @@
 (ns wwoz_to_spotify.worker)
 (require 'feedme)
+(require '[clj-spotify.core :as spotify])
 
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
