@@ -23,7 +23,8 @@
   []
   (println "Consume RSS feed...")
   (println
-   (read-feed "https://spinitron.com/public/rss.php?station=wwoz"))
+   (get
+    (read-feed "https://spinitron.com/public/rss.php?station=wwoz") :entries))
   nil)
 
 (defn wwoz-to-spotify

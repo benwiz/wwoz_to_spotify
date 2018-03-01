@@ -14,8 +14,6 @@ lein run
 
 ## To Do
 
-- Consume WWOZ's Spinitron RSS feed
-  - https://github.com/benwiz/wwoz-spintron-api/blob/master/src/wwoz_spintron_api/core.clj
 - Find each song on Spotify
   - https://developer.spotify.com/web-api/search-item/
 - Check the songs that are already on the playlist against the new songs
