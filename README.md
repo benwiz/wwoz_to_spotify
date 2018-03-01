@@ -6,6 +6,12 @@ Scrape WWOZ Spinitron's RSS feed and add all songs to a Spotify playlist.
 lein lambda deploy production
 ```
 
+run locally
+
+```bash
+lein run
+```
+
 ## To Do
 
 - Consume WWOZ's Spinitron RSS feed

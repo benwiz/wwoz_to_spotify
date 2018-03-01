@@ -14,3 +14,7 @@
         (cheshire/parse-stream true)
         (lambda-handler)
         (cheshire/generate-stream writer))))
+
+(defn -main
+  []
+  nil)

@@ -8,7 +8,8 @@
                  [ring/ring-json "0.4.0"]
                  [uswitch/lambada "0.1.2"]
                  [cheshire "5.7.1"]
-                 [ring-apigw-lambda-proxy "0.3.0"]]
+                 [ring-apigw-lambda-proxy "0.3.0"]
+                 [feedme "0.0.3"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-lambda "0.2.0"]]
   :ring {:handler wwoz_to_spotify.handler/app}
@@ -20,4 +21,5 @@
                       :handler "wwoz_to_spotify.lambda.LambdaFn"}
            :api-gateway {:name "wwoz_to_spotify"}
            :stages {"production" {:warmup {:enable true}}
-                    "staging"    {}}})
+                    "staging"    {}}}
+  :main wwoz_to_spotify.lambda)
