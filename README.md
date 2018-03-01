@@ -18,6 +18,7 @@ I manually created a Spotify refresh token with `playlist-modify-public` scope. 
 
 ## To Do
 
+- Create pull request for clj-spotify repo for refresh token
 - Figure out how to get my refresh token, then ensure that I can use that forever.
 
 - Find each song on Spotify
