@@ -1,7 +1,8 @@
 (ns wwoz_to_spotify.worker)
 (require 'feedme)
 (require '[clj-spotify.core :as spotify])
-(require '[clj-spotify.util :as spotify-util])
+; (require '[clj-spotify.util :as spotify-util])
+(require '[wwoz_to_spotify.spotify_util :as spotify-util])
 
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
@@ -25,13 +26,15 @@
   []
   (spotify-util/get-access-token
    (System/getenv "SPOTIFY_CLIENT_ID")
-   (System/getenv "SPOTIFY_CLIENT_SECRET")))
+   (System/getenv "SPOTIFY_CLIENT_SECRET")
+   (System/getenv "SPOTIFY_REFRESH_TOKEN")))
 
 (defn spotify-handler
   "Do all Spotify stuff. Eventually will need to take track info from RSS feed."
   [track_uri]
   (println "Do Spotify stuff...")
   (let [token (get-spotify-token)]
+    (println token)
     (println
      (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token)))
   nil)

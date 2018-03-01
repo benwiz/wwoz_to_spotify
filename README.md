@@ -12,9 +12,13 @@ run locally
 lein run
 ```
 
+## Notes
+
+I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens.
+
 ## To Do
 
-- Look into: https://github.com/blmstrm/clj-spotify
+- Figure out how to get my refresh token, then ensure that I can use that forever.
 
 - Find each song on Spotify
   - https://developer.spotify.com/web-api/search-item/
