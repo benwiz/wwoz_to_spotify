@@ -3,6 +3,11 @@
 (require '[clj-spotify.core :as spotify])
 ; (require '[clj-spotify.util :as spotify-util])
 (require '[wwoz_to_spotify.spotify_util :as spotify-util])
+(require '[rotary.client :as rotary])
+(require '[cheshire.core :as cheshire])
+
+(def aws-credential {:access-key (System/getenv "AWS_ACCESS_KEY_ID"),
+                     :secret-key (System/getenv "AWS_SECRET_ACCESS_KEY")})
 
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
@@ -31,12 +36,24 @@
 
 (defn spotify-handler
   "Do all Spotify stuff. Eventually will need to take track info from RSS feed."
-  [search_term]
-  (println "Do Spotify stuff..." search_term)
-  (let [token (get-spotify-token)]
-    ; TODO: search spotify
-    (println (spotify/search {:q "Gerry Rafferty" :type "artist,track" :limit 1} token)))
-  ; (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token))
+  [search_term playlist_track_uris]
+  (let [token (get-spotify-token)
+        search_term (clojure.string/replace (clojure.string/replace search_term "'" "") ":" "")]
+    (println "Search spotify for:" search_term)
+    (let [track_uri (get
+                     (get
+                      (get
+                       (get
+                        (spotify/search {:q search_term :type "track" :limit 1} token)
+                        :tracks)
+                       :items)
+                      0)
+                     :uri)]
+      (println "Track URI:" track_uri)
+      (if track_uri
+        (println
+         "Added track to playlist"
+         (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token)))))
   nil)
 
 (defn consume-wwoz-rss
@@ -50,9 +67,15 @@
   if song is not in track list add to new list, add all tracks in new list
   to playlist."
   []
+  (println (rotary/list-tables aws-credential))
   (doall
    (map (fn [entry]
-          (spotify-handler (get entry :title)))
+          ; TODO: Confirm that `:id` does not exist in database
+          (rotary/put-item aws-credential "wwoz-to-spotify" 1)
+          ; TODO: Add `:id` to database
+
+          ; (spotify-handler (get entry :title) [])
+)
         (consume-wwoz-rss)))
   nil)
 
