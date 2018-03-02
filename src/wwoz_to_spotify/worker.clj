@@ -34,25 +34,21 @@
   [track_uri]
   (println "Do Spotify stuff...")
   (let [token (get-spotify-token)]
-    (println token)
-    (println
-     (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token)))
+    (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token))
   nil)
 
 (defn consume-wwoz-rss
   "Consume WWOZ's Spinitron RSS feed."
   []
   (println "Consume RSS feed...")
-  (get (read-feed "https://spinitron.com/public/rss.php?station=wwoz") :entries)
-  nil)
+  (get (read-feed "https://spinitron.com/public/rss.php?station=wwoz") :entries))
 
 (defn wwoz-to-spotify
   "Get playlist track list, consume RSS feed, identify each on Spotify,
   if song is not in track list add to new list, add all tracks in new list
   to playlist."
   []
-  ; (consume-wwoz-rss)
-  (spotify-handler "spotify:track:5nZ7hoYakhGtfEizQKA1fp")
+  (doall (map println (consume-wwoz-rss)))
   nil)
 
 (defn run
