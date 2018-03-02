@@ -31,10 +31,12 @@
 
 (defn spotify-handler
   "Do all Spotify stuff. Eventually will need to take track info from RSS feed."
-  [track_uri]
-  (println "Do Spotify stuff...")
+  [search_term]
+  (println "Do Spotify stuff..." search_term)
   (let [token (get-spotify-token)]
-    (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token))
+    ; TODO: search spotify
+    (println (spotify/search {:q "Gerry Rafferty" :type "artist,track" :limit 1} token)))
+  ; (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token))
   nil)
 
 (defn consume-wwoz-rss
@@ -48,7 +50,10 @@
   if song is not in track list add to new list, add all tracks in new list
   to playlist."
   []
-  (doall (map println (consume-wwoz-rss)))
+  (doall
+   (map (fn [entry]
+          (spotify-handler (get entry :title)))
+        (consume-wwoz-rss)))
   nil)
 
 (defn run
