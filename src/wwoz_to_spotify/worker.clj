@@ -87,7 +87,6 @@
             ; added to playlist then add it to the playlist.
             (let [track-uri (search-spotify (get entry :title) token)]
               (if track-uri
-                ; (println track-uri (get recently-added-uris 0))
                 (if (not (some #{track-uri} recently-added-uris))
                   (println
                    "Added track to playlist"
