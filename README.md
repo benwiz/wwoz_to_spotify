@@ -1,5 +1,7 @@
 # wwoz_to_spotify
 
+My first clojure project.
+
 Scrape WWOZ Spinitron's RSS feed and add all songs to a Spotify playlist.
 
 ```bash
