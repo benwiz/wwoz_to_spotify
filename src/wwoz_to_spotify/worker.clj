@@ -106,4 +106,4 @@
   nil)
 
 ; Executed for local run using `lein exec src/wwoz_to_spotify/worker.clj`
-(run)
+; (run)
