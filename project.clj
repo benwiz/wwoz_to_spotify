@@ -24,4 +24,5 @@
            :api-gateway {:name "wwoz_to_spotify"}
            :stages {"production" {:warmup {:enable true}}
                     "staging"    {}}}
+  ; For local runs
   :main wwoz_to_spotify.lambda)
