@@ -18,7 +18,6 @@ lein run
 
 - I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens.
 - I decided that I don't care if there are duplicated because that's a better representation of what wwoz is playing. But I _do_ need to not re-run the same RSS feed data.
-- Use the link provided at the key `:id` in RSS feed data to find which show the song came from, if we want to do that (probably not)
 
 ## Useful Stuff
 
