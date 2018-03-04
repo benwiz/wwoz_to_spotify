@@ -147,7 +147,5 @@ Spotify Search results.
 
 ## To Do
 
-- https://github.com/weavejester/rotary
-- Don't run the same RSS record multiple times
-  - Look at the RSS record `:id` key. It contains a unique url.
-  - I must store the URL somewhere and check that it is not already stored before passing the data to spotify handler.
+- Instead of sending only one track uri to Spotify at a time, all should be collected then used in a batch post.
+  - But this likely won't be a huge savings since the intention is to run this job frequently.

@@ -3,11 +3,11 @@
 (require '[clj-spotify.core :as spotify])
 ; (require '[clj-spotify.util :as spotify-util])
 (require '[wwoz_to_spotify.spotify_util :as spotify-util])
-(require '[rotary.client :as rotary])
+; (require '[rotary.client :as rotary])
 (require '[cheshire.core :as cheshire])
 
-(def aws-credential {:access-key (System/getenv "AWS_ACCESS_KEY_ID"),
-                     :secret-key (System/getenv "AWS_SECRET_ACCESS_KEY")})
+; (def aws-credential {:access-key (System/getenv "AWS_ACCESS_KEY_ID"),
+;                      :secret-key (System/getenv "AWS_SECRET_ACCESS_KEY")})
 
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
@@ -34,27 +34,36 @@
    (System/getenv "SPOTIFY_CLIENT_SECRET")
    (System/getenv "SPOTIFY_REFRESH_TOKEN")))
 
-(defn spotify-handler
-  "Do all Spotify stuff. Eventually will need to take track info from RSS feed."
-  [search_term playlist_track_uris]
-  (let [token (get-spotify-token)
-        search_term (clojure.string/replace (clojure.string/replace search_term "'" "") ":" "")]
-    (println "Search spotify for:" search_term)
-    (let [track_uri (get
+(defn get-recent-tracks-spotify
+  "Get `n` most recently added tracks from the playlist"
+  [user-id playlist-id n token]
+  (map
+   (fn [item] (get (get item :track) :uri))
+   (get
+    (spotify/get-a-playlists-tracks {:user_id user-id
+                                     :playlist_id playlist-id
+                                     :fields "items(track(uri))"
+                                     :limit 50
+                                     :offset 0}
+                                    token)
+    :items)))
+
+(defn search-spotify
+  "Search for song on Spotify, return URI."
+  [search-term token]
+  (let [search-term (clojure.string/replace (clojure.string/replace search-term "'" "") ":" "")]
+    (println "Search spotify for:" search-term)
+    (let [track-uri (get
                      (get
                       (get
                        (get
-                        (spotify/search {:q search_term :type "track" :limit 1} token)
+                        (spotify/search {:q search-term :type "track" :limit 1} token)
                         :tracks)
                        :items)
                       0)
                      :uri)]
-      (println "Track URI:" track_uri)
-      (if track_uri
-        (println
-         "Added track to playlist"
-         (spotify/add-tracks-to-a-playlist {:user_id "bwisialowski" :playlist_id "3vjFwtIxnPkNXk0XWTj0wy" :uris [track_uri]} token)))))
-  nil)
+      (println "Track URI:" track-uri)
+      track-uri)))
 
 (defn consume-wwoz-rss
   "Consume WWOZ's Spinitron RSS feed."
@@ -67,16 +76,27 @@
   if song is not in track list add to new list, add all tracks in new list
   to playlist."
   []
-  (println (rotary/list-tables aws-credential))
-  (doall
-   (map (fn [entry]
-          ; TODO: Confirm that `:id` does not exist in database
-          (rotary/put-item aws-credential "wwoz-to-spotify" 1)
-          ; TODO: Add `:id` to database
-
-          ; (spotify-handler (get entry :title) [])
-)
-        (consume-wwoz-rss)))
+  ; For each RSS entry
+  (let [user-id "bwisialowski"
+        playlist-id "3vjFwtIxnPkNXk0XWTj0wy"
+        token (get-spotify-token)
+        recently-added-uris (get-recent-tracks-spotify user-id playlist-id 50 token)]
+    (doall
+     (map (fn [entry]
+            ; Get track URI and if one was found and not recently
+            ; added to playlist then add it to the playlist.
+            (let [track-uri (search-spotify (get entry :title) token)]
+              (if track-uri
+                ; (println track-uri (get recently-added-uris 0))
+                (if (not (some #{track-uri} recently-added-uris))
+                  (println
+                   "Added track to playlist"
+                   (spotify/add-tracks-to-a-playlist {:user_id user-id
+                                                      :playlist_id playlist-id
+                                                      :uris [track-uri]
+                                                      :position 0}
+                                                     token))))))
+          (consume-wwoz-rss))))
   nil)
 
 (defn run
