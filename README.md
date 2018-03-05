@@ -1,23 +1,27 @@
 # wwoz_to_spotify
 
-My first clojure project.
-
 Scrape WWOZ Spinitron's RSS feed and add all songs to a Spotify playlist.
 
-```bash
-lein lambda deploy production
-```
+My first clojure project.
 
-run locally
-
-```bash
-lein run
-```
+<iframe src="https://open.spotify.com/embed/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
 
 ## Notes
 
 - I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens.
 - I decided that I don't care if there are duplicated because that's a better representation of what wwoz is playing. But I _do_ need to not re-run the same RSS feed data.
+
+To deploy
+
+```bash
+lein lambda deploy production
+```
+
+To run locally
+
+```bash
+lein run
+```
 
 ## Useful Stuff
 
