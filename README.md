@@ -4,7 +4,7 @@ Scrape WWOZ Spinitron's RSS feed and add all songs to a Spotify playlist.
 
 My first clojure project.
 
-<iframe src="https://open.spotify.com/embed/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+[Playlist](https://open.spotify.com/embed/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy)
 
 ## How to works
 
