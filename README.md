@@ -6,6 +6,15 @@ My first clojure project.
 
 <iframe src="https://open.spotify.com/embed/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
 
+## How to works
+
+- Read Spinitron's list of WWOZ's last 50 songs
+- Get the 50 most recently added songs from playlist on Spotify
+- For each of the 50 RSS records
+  - Search for the song on Spotify
+  - If the song is not in the 50 most recently added songs already
+    - Add the song to the playlist
+
 ## Notes
 
 - I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens.
