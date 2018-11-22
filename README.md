@@ -2,7 +2,7 @@
 
 Scrape WWOZ Spinitron's RSS feed and add all songs to a Spotify playlist.
 
-One of my first Clojur projects and the first that runs as a scheduled AWS Lambda function.
+One of my first Clojure projects and the first that runs as a scheduled AWS Lambda function.
 
 [Playlist](https://open.spotify.com/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy)
 
