@@ -78,7 +78,7 @@
   []
   ; For each RSS entry
   (let [user-id "bwisialowski"
-        playlist-id "18klOu16oLZfBvRncgAZhO" ; "3vjFwtIxnPkNXk0XWTj0wy"
+        playlist-id (System/getenv "SPOTIFY_PLAYLIST_ID") ; "18klOu16oLZfBvRncgAZhO" ; "3vjFwtIxnPkNXk0XWTj0wy"
         token (get-spotify-token)
         recently-added-uris (get-recent-tracks-spotify user-id playlist-id 50 token)]
     (doall
