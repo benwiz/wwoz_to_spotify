@@ -22,13 +22,13 @@ NOTE: I have temporarily shut off the functions until I add the functionality to
 - I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens.
 - I decided that I don't care if there are duplicated because that's a better representation of what wwoz is playing. But I _do_ need to not re-run the same RSS feed data.
 
-To deploy
+To deploy. Also, run `export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)` before deploy.
 
 ```bash
 lein lambda deploy production
 ```
 
-To run locally
+To run locally. But remember to uncomment the last line of _worker.clj_ and set the env vars needed by the `get-spotify-token` function.
 
 ```bash
 lein run
