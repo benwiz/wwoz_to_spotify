@@ -166,3 +166,7 @@ Spotify Search results.
 - Automatically create a new playlist and use that playlist's ID when the current playlist reaches 9,900 songs. For now I'm doing that manually once in a while.
 - Instead of sending only one track uri to Spotify at a time, all should be collected then used in a batch post.
   - But this likely won't be a huge savings since the intention is to run this job frequently.
+  
+  
+  
+  - Revitalize this project and use the spotify playlist like a ring buffer (just clear out the oldest songs over id 9000)
