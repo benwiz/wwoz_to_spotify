@@ -1,6 +1,7 @@
 (ns wwoz_to_spotify.spotify_util
   (:require [clj-http.client :as client]))
 
+;; TODO: I should be able to use clj-clojure since the change has been merged in
 (defn get-access-token
   "Copied from clj-clojure repo and modified to handle refresh.
 

@@ -16,13 +16,13 @@
             [lein-lambda "0.2.0"]]
   :ring {:handler wwoz_to_spotify.handler/app}
   :profiles
-  {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
-                        [ring/ring-mock "0.3.1"]]}
+  {:dev     {:dependencies [[javax.servlet/servlet-api "2.5"]
+                            [ring/ring-mock "0.3.1"]]}
    :uberjar {:aot :all}}
-  :lambda {:function {:name "wwoz-to-spotify" ; bucket name cannot contain underscores
-                      :handler "wwoz_to_spotify.lambda.LambdaFn"}
+  :lambda {:function    {:name    "wwoz-to-spotify" ;; bucket name cannot contain underscores
+                         :handler "wwoz_to_spotify.lambda.LambdaFn"}
            :api-gateway {:name "wwoz_to_spotify"}
-           :stages {"production" {:warmup {:enable true}}
-                    "staging"    {}}}
+           :stages      {"production" {:warmup {:enable true}}
+                         "staging"    {}}}
   ; For local runs
   :main wwoz_to_spotify.lambda)

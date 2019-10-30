@@ -1,30 +1,26 @@
 # wwoz_to_spotify
 
-Scrape WWOZ Spinitron's RSS feed and add all songs to a Spotify playlist.
+Maintain the last 1000 songs played on WWOZ 90.7 in a [Spotify playlist](https://open.spotify.com/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy)
 
-One of my first Clojure projects and the first that runs as a scheduled AWS Lambda function.
-
-[Playlist](https://open.spotify.com/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy)
-
-NOTE: I have temporarily shut off the functions until I add the functionality to auto-generate a new Spotify playlist when the max capacity of ~10,000 songs is reached.
+Rewrite of one of my first clojure projects.
 
 ## How to works
 
-- Read Spinitron's list of WWOZ's last 50 songs
-- Get the 50 most recently added songs from playlist on Spotify
-- For each of the 50 RSS records
+- Read Spinitron's list of WWOZ's last N songs
+- Get the N most recently added songs from playlist on Spotify
+- For each of the RSS records
   - Search for the song on Spotify
-  - If the song is not in the 50 most recently added songs already
+  - If the song is not in the N most recently added songs already
     - Add the song to the playlist
 
 ## Notes
 
 - I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens.
-- I decided that I don't care if there are duplicated because that's a better representation of what wwoz is playing. But I _do_ need to not re-run the same RSS feed data.
 
-To deploy. Also, run `export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)` before deploy.
+To deploy
 
 ```bash
+source .env
 lein lambda deploy production
 ```
 
@@ -34,7 +30,7 @@ To run locally. But remember to uncomment the last line of _worker.clj_ and set 
 lein run
 ```
 
-## Useful Stuff
+## Example Data
 
 RSS feed data.
 
@@ -163,10 +159,4 @@ Spotify Search results.
 
 ## To Do
 
-- Automatically create a new playlist and use that playlist's ID when the current playlist reaches 9,900 songs. For now I'm doing that manually once in a while.
-- Instead of sending only one track uri to Spotify at a time, all should be collected then used in a batch post.
-  - But this likely won't be a huge savings since the intention is to run this job frequently.
-  
-  
-  
-  - Revitalize this project and use the spotify playlist like a ring buffer (just clear out the oldest songs over id 9000)
+- Figure out how to deploy https://github.com/paulbutcher/lein-lambda

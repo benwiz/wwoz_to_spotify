@@ -1,13 +1,13 @@
 (ns wwoz_to_spotify.worker)
 (require 'feedme)
 (require '[clj-spotify.core :as spotify])
-; (require '[clj-spotify.util :as spotify-util])
+;; (require '[clj-spotify.util :as spotify-util])
 (require '[wwoz_to_spotify.spotify_util :as spotify-util])
-; (require '[rotary.client :as rotary])
+;; (require '[rotary.client :as rotary])
 (require '[cheshire.core :as cheshire])
 
-; (def aws-credential {:access-key (System/getenv "AWS_ACCESS_KEY_ID"),
-;                      :secret-key (System/getenv "AWS_SECRET_ACCESS_KEY")})
+;; (def aws-credential {:access-key (System/getenv "AWS_ACCESS_KEY_ID"),
+;;                      :secret-key (System/getenv "AWS_SECRET_ACCESS_KEY")})
 
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
@@ -40,11 +40,11 @@
   (map
    (fn [item] (get (get item :track) :uri))
    (get
-    (spotify/get-a-playlists-tracks {:user_id user-id
+    (spotify/get-a-playlists-tracks {:user_id     user-id
                                      :playlist_id playlist-id
-                                     :fields "items(track(uri))"
-                                     :limit 50
-                                     :offset 0}
+                                     :fields      "items(track(uri))"
+                                     :limit       50
+                                     :offset      0}
                                     token)
     :items)))
 
@@ -76,15 +76,15 @@
   if song is not in track list add to new list, add all tracks in new list
   to playlist."
   []
-  ; For each RSS entry
+                                        ; For each RSS entry
   (let [user-id "bwisialowski"
         playlist-id (System/getenv "SPOTIFY_PLAYLIST_ID") ; "18klOu16oLZfBvRncgAZhO" ; "3vjFwtIxnPkNXk0XWTj0wy"
         token (get-spotify-token)
         recently-added-uris (get-recent-tracks-spotify user-id playlist-id 50 token)]
     (doall
      (map (fn [entry]
-            ; Get track URI and if one was found and not recently
-            ; added to playlist then add it to the playlist.
+                                        ; Get track URI and if one was found and not recently
+                                        ; added to playlist then add it to the playlist.
             (let [track-uri (search-spotify (get entry :title) token)]
               (if track-uri
                 (if (not (some #{track-uri} recently-added-uris))
@@ -103,7 +103,5 @@
   []
   (println "Run...")
   (wwoz-to-spotify)
+  ;; TODO: This is probably an important response to Lambda
   nil)
-
-; Executed for local run using `lein run`
-; (run)
