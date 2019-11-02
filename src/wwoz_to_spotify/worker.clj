@@ -1,13 +1,9 @@
-(ns wwoz_to_spotify.worker)
-(require 'feedme)
-(require '[clj-spotify.core :as spotify])
-; (require '[clj-spotify.util :as spotify-util])
-(require '[wwoz_to_spotify.spotify_util :as spotify-util])
-; (require '[rotary.client :as rotary])
-(require '[cheshire.core :as cheshire])
-
-; (def aws-credential {:access-key (System/getenv "AWS_ACCESS_KEY_ID"),
-;                      :secret-key (System/getenv "AWS_SECRET_ACCESS_KEY")})
+(ns wwoz_to_spotify.worker
+  (:require
+   [clj-spotify.core :as spotify]
+   [cheshire.core :as cheshire]
+   [feedme]
+   [wwoz_to_spotify.spotify_util :as spotify-util]))
 
 (def config
   {:aws-region            "us-east-1"
@@ -113,6 +109,3 @@
   (println "Run...")
   (wwoz-to-spotify)
   nil)
-
-; Executed for local run using `lein run`
-; (run)
