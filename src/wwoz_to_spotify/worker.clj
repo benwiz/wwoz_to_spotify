@@ -77,9 +77,9 @@
   to playlist."
   []
   ; For each RSS entry
-  (let [user-id "bwisialowski"
-        playlist-id (System/getenv "SPOTIFY_PLAYLIST_ID") ; "18klOu16oLZfBvRncgAZhO" ; "3vjFwtIxnPkNXk0XWTj0wy"
-        token (get-spotify-token)
+  (let [user-id             "bwisialowski"
+        playlist-id         (System/getenv "SPOTIFY_PLAYLIST_ID") ; "18klOu16oLZfBvRncgAZhO" ; "3vjFwtIxnPkNXk0XWTj0wy"
+        token               (get-spotify-token)
         recently-added-uris (get-recent-tracks-spotify user-id playlist-id 50 token)]
     (doall
      (map (fn [entry]
@@ -90,10 +90,10 @@
                 (if (not (some #{track-uri} recently-added-uris))
                   (println
                    "Added track to playlist"
-                   (spotify/add-tracks-to-a-playlist {:user_id user-id
+                   (spotify/add-tracks-to-a-playlist {:user_id     user-id
                                                       :playlist_id playlist-id
-                                                      :uris [track-uri]
-                                                      :position 0}
+                                                      :uris        [track-uri]
+                                                      :position    0}
                                                      token))))))
           (consume-wwoz-rss))))
   nil)

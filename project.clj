@@ -10,7 +10,7 @@
                  [cheshire "5.7.1"]
                  [ring-apigw-lambda-proxy "0.3.0"]
                  [feedme "0.0.3"]
-                 [clj-spotify "0.1.5"]
+                 [clj-spotify "0.1.5"] ;; TODO: Upgrade to 0.1.9 and use only this
                  [rotary "0.4.1"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-lambda "0.2.0"]]
