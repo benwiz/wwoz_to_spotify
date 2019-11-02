@@ -9,6 +9,15 @@
 ; (def aws-credential {:access-key (System/getenv "AWS_ACCESS_KEY_ID"),
 ;                      :secret-key (System/getenv "AWS_SECRET_ACCESS_KEY")})
 
+(def config
+  {:aws-region            "us-east-1"
+   :aws-access-key-id     (System/getenv "AWS_ACCESS_KEY_ID")
+   :aws-secret-access-key (System/getenv "AWS_SECRET_ACCESS_KEY")
+   :spotify-client-id     (System/getenv "SPOTIFY_CLIENT_ID")
+   :spotify-client-secret (System/getenv "SPOTIFY_CLIENT_SECRET")
+   :spotify-refresh-token (System/getenv "SPOTIFY_REFRESH_TOKEN")
+   :spotify-playlist-id   "3vjFwtIxnPkNXk0XWTj0wy"})
+
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
   Clean envelope and each entry."
