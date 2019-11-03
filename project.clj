@@ -11,7 +11,9 @@
                  [ring-apigw-lambda-proxy "0.3.0"]
                  [feedme "0.0.3"]
                  [clj-spotify "0.1.5"] ;; TODO: Upgrade to 0.1.9 and use only this
-                 [rotary "0.4.1"]]
+                 [rotary "0.4.1"]
+                 [aleph "0.4.6"]
+                 [byte-streams "0.2.4"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-lambda "0.2.0"]]
   :ring {:handler wwoz_to_spotify.handler/app}

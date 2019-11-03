@@ -1,7 +1,9 @@
 (ns wwoz_to_spotify.worker
   (:require
-   [clj-spotify.core :as spotify]
+   [aleph.http :as http]
+   [byte-streams :as bs]
    [cheshire.core :as cheshire]
+   [clj-spotify.core :as spotify]
    [feedme]
    [wwoz_to_spotify.spotify_util :as spotify-util]))
 
@@ -9,6 +11,7 @@
   {:aws-region            "us-east-1"
    :aws-access-key-id     (System/getenv "AWS_ACCESS_KEY_ID")
    :aws-secret-access-key (System/getenv "AWS_SECRET_ACCESS_KEY")
+   :spotify-user-id       "bwisialowski"
    :spotify-client-id     (System/getenv "SPOTIFY_CLIENT_ID")
    :spotify-client-secret (System/getenv "SPOTIFY_CLIENT_SECRET")
    :spotify-refresh-token (System/getenv "SPOTIFY_REFRESH_TOKEN")
@@ -16,14 +19,13 @@
 
 (defn clean-feed
   "Clean the feed by replacing java.util.Date with strings.
-  Clean envelope and each entry."
+   Clean envelope and each entry."
   [feed]
-  (let [cleaner-feed (update feed :published str)]
-    (update cleaner-feed :entries
-            (fn [entries]
-              (map (fn [entry]
-                     (update entry :published str))
-                   entries)))))
+  (update (update feed :published str)
+          :entries (fn [entries]
+                     (map (fn [entry]
+                            (update entry :published str))
+                          entries))))
 
 (defn read-feed
   "Parse the provided feed."
@@ -70,11 +72,13 @@
       (println "Track URI:" track-uri)
       track-uri)))
 
-(defn consume-wwoz-rss
-  "Consume WWOZ's Spinitron RSS feed."
+(defn consume-wwoz-html
+  "Consume WWOZ's Last 100 Played HTML"
   []
-  (println "Consume RSS feed...")
-  (get (read-feed "https://spinitron.com/public/rss.php?station=wwoz") :entries))
+  (println "Consume WWOZ HTML...")
+  (-> @(http/get "https://www.wwoz.org/programs/playlists")
+      :body
+      bs/to-string))
 
 (defn wwoz-to-spotify
   "Get playlist track list, consume RSS feed, identify each on Spotify,
@@ -82,8 +86,8 @@
   to playlist."
   []
   ; For each RSS entry
-  (let [user-id             "bwisialowski"
-        playlist-id         (System/getenv "SPOTIFY_PLAYLIST_ID") ; "18klOu16oLZfBvRncgAZhO" ; "3vjFwtIxnPkNXk0XWTj0wy"
+  (let [user-id             (:spotify-user-id config)
+        playlist-id         (:spotify-playlist-id)
         token               (get-spotify-token)
         recently-added-uris (get-recent-tracks-spotify user-id playlist-id 50 token)]
     (doall
@@ -93,14 +97,16 @@
             (let [track-uri (search-spotify (get entry :title) token)]
               (if track-uri
                 (if (not (some #{track-uri} recently-added-uris))
-                  (println
-                   "Added track to playlist"
-                   (spotify/add-tracks-to-a-playlist {:user_id     user-id
-                                                      :playlist_id playlist-id
-                                                      :uris        [track-uri]
-                                                      :position    0}
-                                                     token))))))
-          (consume-wwoz-rss))))
+                  #_(spotify/add-tracks-to-a-playlist {:user_id     user-id
+                                                       :playlist_id playlist-id
+                                                       :uris        [track-uri]
+                                                       :position    0}
+                                                      token)
+                  (println "Add track to playlist" {:user_id     user-id
+                                                    :playlist_id playlist-id
+                                                    :uris        [track-uri]
+                                                    :position    0})))))
+          (consume-wwoz-html))))
   nil)
 
 (defn run
