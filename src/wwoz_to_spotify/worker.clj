@@ -18,7 +18,7 @@
    :spotify-client-id     (System/getenv "SPOTIFY_CLIENT_ID")
    :spotify-client-secret (System/getenv "SPOTIFY_CLIENT_SECRET")
    :spotify-refresh-token (System/getenv "SPOTIFY_REFRESH_TOKEN")
-   :spotify-playlist-id   "3vjFwtIxnPkNXk0XWTj0wy"})
+   :spotify-playlist-id   "5P6WEbhcUsmXB08owijHYd"})
 
 (defn consume-html
   "Consume WWOZ's Last ~7 songs Played HTML.
@@ -95,7 +95,6 @@
 
 
 
-
 (defn run
   "Start the whole thing."
   []
@@ -103,8 +102,10 @@
     (-> (consume-html)
         parse-html
         (spotify-tracks token)
-        (recent-spotify-tracks token)
-        ;; TODO: Use `diff` to remove overlaps
+        (recent-spotify-tracks token) ;; TODO: There is a bug where this isn't grabbing all the tracks it should
+        ;; TODO: Use `diff` to remove overlaps... but diff may be ordered so maybe not?
+        ;; TODO: Add tracks
+        ;; TODO: Remove old dated tracks (can/should probably happen concurrently)
         ))
   ;; TODO: What return value?
   )
