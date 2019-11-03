@@ -25,7 +25,6 @@
    Can't use WWOZ's website because the table
    is populated with JavaScript, I think."
   []
-  (println "Consume WWOZ HTML...")
   (-> @(http/get "https://spinitron.com/WWOZ/")
       :body
       bs/to-string
@@ -65,36 +64,33 @@
 (defn search-spotify
   "Search for song on Spotify, return URI."
   [search-term token]
-  (prn "Search for:" search-term)
-  #_(let [search-term (str/replace (str/replace search-term "'" "") ":" "")]
-    (println "Search spotify for:" search-term)
-    (let [track-uri (-> (spotify/search {:q search-term :type "track" :limit 1} token)
+  (let [search-term (-> (str/replace search-term "'" "") (str/replace ":" ""))
+        track-uri   (-> (spotify/search {:q search-term :type "track" :limit 1} token)
                         :tracks
                         :items
                         first
                         :uri)]
-      (println "Track URI:" track-uri)
-      track-uri)))
+    track-uri))
 
 
 (defn spotify-tracks
   "Get the Spotify track from the song and artist names."
   [tracks token]
-  (map (fn [track]
-         (search-spotify (str (:song track) ", " (:artist track)) token))
-       tracks))
+  {:new (map (fn [track]
+               (search-spotify (str (:song track) ", " (:artist track)) token))
+             tracks)})
 
 
 (defn recent-spotify-tracks [tracks token]
-  {:new    tracks
-   :recent (map
-            #(get-in % [:track :uri])
-            (:items (spotify/get-a-playlists-tracks {:user_id     (:spotify-user-id config)
-                                                     :playlist_id (:spotify-playlist-id config)
-                                                     :fields      "items(track(uri))"
-                                                     :limit       (count tracks)
-                                                     :offset      0}
-                                                    token)))})
+  (assoc tracks
+         :recent (map
+                  #(get-in % [:track :uri])
+                  (:items (spotify/get-a-playlists-tracks {:user_id     (:spotify-user-id config)
+                                                           :playlist_id (:spotify-playlist-id config)
+                                                           :fields      "items(track(uri))"
+                                                           :limit       (count tracks)
+                                                           :offset      0}
+                                                          token)))))
 
 
 
@@ -103,12 +99,11 @@
 (defn run
   "Start the whole thing."
   []
-  (println "Run...")
   (let [token (spotify-token)]
     (-> (consume-html)
         parse-html
         (spotify-tracks token)
-        #_recent-spotify-tracks
+        (recent-spotify-tracks token)
         ;; TODO: Use `diff` to remove overlaps
         ))
   ;; TODO: What return value?
