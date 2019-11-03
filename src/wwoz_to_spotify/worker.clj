@@ -5,6 +5,8 @@
    [cheshire.core :as cheshire]
    [clj-spotify.core :as spotify]
    [feedme]
+   [hickory.core :as h]
+   [hickory.select :as s]
    [wwoz_to_spotify.spotify_util :as spotify-util]))
 
 (def config
@@ -72,42 +74,65 @@
       (println "Track URI:" track-uri)
       track-uri)))
 
-(defn consume-wwoz-html
-  "Consume WWOZ's Last 100 Played HTML"
+
+(defn consume-html
+  "Consume WWOZ's Last ~7 songs Played HTML.
+   Can't use WWOZ's website because the table
+   is populated with JavaScript, I think."
   []
   (println "Consume WWOZ HTML...")
-  (-> @(http/get "https://www.wwoz.org/programs/playlists")
+  (-> @(http/get "https://spinitron.com/WWOZ/")
       :body
-      bs/to-string))
+      bs/to-string
+      h/parse
+      h/as-hickory))
+
+
+(defn parse-html [tree]
+  (-> (s/select (s/child (s/id :public-spins-0)
+                         (s/tag :table)
+                         (s/tag :tbody))
+                tree)
+      first
+      :content
+      rest
+      (->> (take-nth 2))
+      (->> (into []
+                 (comp
+                  (map :attrs)
+                  (map :data-spin)
+                  (map cheshire/parse-string)
+                  (map (fn [d]
+                         {:artist (get d "a")
+                          :song   (get d "s")
+                          :album  (get d "r")})))))))
+
 
 (defn wwoz-to-spotify
   "Get playlist track list, consume RSS feed, identify each on Spotify,
   if song is not in track list add to new list, add all tracks in new list
   to playlist."
   []
-  ; For each RSS entry
   (let [user-id             (:spotify-user-id config)
         playlist-id         (:spotify-playlist-id)
         token               (get-spotify-token)
         recently-added-uris (get-recent-tracks-spotify user-id playlist-id 50 token)]
-    (doall
-     (map (fn [entry]
-            ; Get track URI and if one was found and not recently
-            ; added to playlist then add it to the playlist.
-            (let [track-uri (search-spotify (get entry :title) token)]
-              (if track-uri
-                (if (not (some #{track-uri} recently-added-uris))
-                  #_(spotify/add-tracks-to-a-playlist {:user_id     user-id
-                                                       :playlist_id playlist-id
-                                                       :uris        [track-uri]
-                                                       :position    0}
-                                                      token)
-                  (println "Add track to playlist" {:user_id     user-id
-                                                    :playlist_id playlist-id
-                                                    :uris        [track-uri]
-                                                    :position    0})))))
-          (consume-wwoz-html))))
-  nil)
+    (map (fn [entry]
+                                        ; Get track URI and if one was found and not recently
+                                        ; added to playlist then add it to the playlist.
+           (let [track-uri (search-spotify (get entry :title) token)]
+             (if track-uri
+               (if (not (some #{track-uri} recently-added-uris))
+                 #_(spotify/add-tracks-to-a-playlist {:user_id     user-id
+                                                      :playlist_id playlist-id
+                                                      :uris        [track-uri]
+                                                      :position    0}
+                                                     token)
+                 (println "Add track to playlist" {:user_id     user-id
+                                                   :playlist_id playlist-id
+                                                   :uris        [track-uri]
+                                                   :position    0})))))
+         (consume-wwoz-html))))
 
 (defn run
   "Start the whole thing."

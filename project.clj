@@ -3,17 +3,18 @@
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [aleph "0.4.6"]
+                 [byte-streams "0.2.4"]
+                 [cheshire "5.9.0"]
                  [compojure "1.6.0"]
+                 [clj-spotify "0.1.5"] ;; TODO: Upgrade to 0.1.9 and use only this
+                 [feedme "0.0.3"] ;; TODO: remove
+                 [hickory "0.7.1"]
                  [ring/ring-defaults "0.3.1"]
                  [ring/ring-json "0.4.0"]
-                 [uswitch/lambada "0.1.2"]
-                 [cheshire "5.7.1"]
                  [ring-apigw-lambda-proxy "0.3.0"]
-                 [feedme "0.0.3"]
-                 [clj-spotify "0.1.5"] ;; TODO: Upgrade to 0.1.9 and use only this
                  [rotary "0.4.1"]
-                 [aleph "0.4.6"]
-                 [byte-streams "0.2.4"]]
+                 [uswitch/lambada "0.1.2"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-lambda "0.2.0"]]
   :ring {:handler wwoz_to_spotify.handler/app}
