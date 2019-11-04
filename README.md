@@ -1,68 +1,17 @@
 # wwoz_to_spotify
 
-Scrape WWOZ Spinitron's RSS feed and add all songs to a Spotify playlist.
+Scrape [WWOZ's Spinitron webpage](https://spinitron.com/WWOZ/) and add all new tracks to a [Spotify playlist](https://open.spotify.com/playlist/5P6WEbhcUsmXB08owijHYd?si=qAxkhFD3Q8WRfrjBY__N2g).
 
-One of my first Clojure projects and the first that runs as a scheduled AWS Lambda function.
-
-[Playlist](https://open.spotify.com/user/bwisialowski/playlist/3vjFwtIxnPkNXk0XWTj0wy)
-
-NOTE: I have temporarily shut off the functions until I add the functionality to auto-generate a new Spotify playlist when the max capacity of ~10,000 songs is reached.
-
-## How to works
-
-- Read Spinitron's list of WWOZ's last 50 songs
-- Get the 50 most recently added songs from playlist on Spotify
-- For each of the 50 RSS records
-  - Search for the song on Spotify
-  - If the song is not in the 50 most recently added songs already
-    - Add the song to the playlist
+Keeps the most recent 100 songs and removes anything older.
 
 ## Notes
 
-- I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens.
-- I decided that I don't care if there are duplicated because that's a better representation of what wwoz is playing. But I _do_ need to not re-run the same RSS feed data.
+I manually created a Spotify refresh token with `playlist-modify-public` scope. This refresh token essentially lasts forever and can be used to generate user-attached access tokens. There is a step-by-step guide [here](https://benwiz.io/blog/create-spotify-refresh-token/).
 
-To deploy. Also, run `export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)` before deploy.
+To deploy. May need to set correct Java version using `export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)`.
 
 ```bash
 lein lambda deploy production
-```
-
-To run locally. But remember to uncomment the last line of _worker.clj_ and set the env vars needed by the `get-spotify-token` function.
-
-```bash
-lein run
-```
-
-## Useful Stuff
-
-RSS feed data.
-
-```json
-{
-  "author": null,
-  "description": "The most recent songs played on WWOZ and logged on Spinitron, WWOZ's playlist handling service provider.",
-  "language": "en-us",
-  "link": "http://spinitron.com//radio/playlist.php?station=wwoz",
-  "type": "rss_2.0",
-  "published": "Sun Feb 25 21:40:57 CST 2018",
-  "title": "Recent spins on WWOZ",
-  "entries": [
-    {
-      "content": "'Few Bana Zambia' by Five Revolutions from Welcome To Zamrock! How Zambia's Liberation Led To A Rock Revolu  spun at 9:40pm CST Sun Feb 25th 2018 by WWOZ Programming on Spirits of Congo Square with Baba Geno, WWOZ New Orleans",
-      "updated": null,
-      "title": "Five Revolutions: 'Few Bana Zambia'",
-      "author": "",
-      "categories": [
-
-      ],
-      "link": "http://spinitron.com/radio/playlist.php?station=wwoz&plid=24413#468935",
-      "id": "http://spinitron.com/radio/playlist.php?station=wwoz&plid=24413#468935",
-      "content-type": null,
-      "published": "Sun Feb 25 21:40:49 CST 2018"
-    }
-  ]
-}
 ```
 
 Spotify Search results.
@@ -162,11 +111,3 @@ Spotify Search results.
 ```
 
 ## To Do
-
-- Automatically create a new playlist and use that playlist's ID when the current playlist reaches 9,900 songs. For now I'm doing that manually once in a while.
-- Instead of sending only one track uri to Spotify at a time, all should be collected then used in a batch post.
-  - But this likely won't be a huge savings since the intention is to run this job frequently.
-  
-  
-  
-  - Revitalize this project and use the spotify playlist like a ring buffer (just clear out the oldest songs over id 9000)
