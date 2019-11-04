@@ -104,21 +104,42 @@
                                      :playlist_id (:spotify-playlist-id config)
                                      :uris        uris
                                      :position    0}
+                                    token))
+
+
+(defn old-spotify-tracks [token]
+  (spotify/get-a-playlists-tracks {:user_id     (:spotify-user-id config)
+                                   :playlist_id (:spotify-playlist-id config)
+                                   :fields      "items(track(uri))"
+                                   :limit       100 ;; 100 is max (and default)
+                                   :offset      2} ;; TODO: change offset to 99
                                   token))
 
 
-(defn run
-  "Start the whole thing."
-  []
+(defn remove-tracks-from-playlist! [tracks token]
+  (clojure.pprint/pprint tracks)
+  (spotify/remove-tracks-from-a-playlist {:user_id     (:spotify-user-id config)
+                                          :playlist_id (:spotify-playlist-id config)
+                                          :tracks      tracks}
+                                         token))
+
+
+(defn run []
   (let [token (spotify-token)]
-    (-> (consume-html)
+    ;; Add new tracks
+    #_(-> (consume-html)
         parse-html
         (spotify-tracks token)
         (recent-spotify-tracks token)
         (update :new #(remove nil? %))
         diff
-        (add-tracks-to-playlist! token)
-        ;; TODO: Remove old dated tracks (can/should probably happen concurrently)
-        ))
+        (add-tracks-to-playlist! token))
+
+    ;; Delete old tracks
+    (-> (old-spotify-tracks token)
+        :items
+        (->> (map :track))
+        (remove-tracks-from-playlist! token)))
+
   ;; TODO: What return value?
   )
