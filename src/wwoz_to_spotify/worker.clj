@@ -6,10 +6,10 @@
    [clojure.data :as d]
    [clojure.string :as str]
    [clj-spotify.core :as spotify]
+   [clj-spotify.util :as spotify-util]
    [feedme]
    [hickory.core :as h]
-   [hickory.select :as s]
-   [wwoz_to_spotify.spotify_util :as spotify-util]))
+   [hickory.select :as s]))
 
 (def config
   {:aws-region            "us-east-1"
@@ -22,9 +22,12 @@
    :spotify-playlist-id   "5P6WEbhcUsmXB08owijHYd"})
 
 (defn consume-html
-  "Consume WWOZ's Last ~7 songs Played HTML.
+  "Consume WWOZ's latest several songs played
+   from Spinitron website.
    Can't use WWOZ's website because the table
-   is populated with JavaScript, I think."
+   is populated with JavaScript.
+   Spinitron's RSS feed no longer exists and its
+   API is closed."
   []
   (-> @(http/get "https://spinitron.com/WWOZ/")
       :body
@@ -56,7 +59,7 @@
 (defn spotify-token
   "Get OAuth2 token."
   []
-  (spotify-util/get-access-token
+  (spotify-util/refresh-access-token
    (:spotify-client-id config)
    (:spotify-client-secret config)
    (:spotify-refresh-token config)))
