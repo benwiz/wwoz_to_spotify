@@ -112,7 +112,7 @@
                                    :playlist_id (:spotify-playlist-id config)
                                    :fields      "items(track(uri))"
                                    :limit       100 ;; 100 is max (and default)
-                                   :offset      2} ;; TODO: change offset to 99
+                                   :offset      99}
                                   token))
 
 
@@ -127,7 +127,7 @@
 (defn run []
   (let [token (spotify-token)]
     ;; Add new tracks
-    #_(-> (consume-html)
+    (-> (consume-html)
         parse-html
         (spotify-tracks token)
         (recent-spotify-tracks token)

@@ -7,7 +7,7 @@
                  [byte-streams "0.2.4"]
                  [cheshire "5.9.0"]
                  [compojure "1.6.0"]
-                 [clj-spotify "0.1.5"] ;; TODO: Upgrade to 0.1.9 and use only this
+                 [clj-spotify "0.1.9"] ;; NOTE: Was using 0.1.9
                  [feedme "0.0.3"] ;; TODO: remove
                  [hickory "0.7.1"]
                  [ring/ring-defaults "0.3.1"]
