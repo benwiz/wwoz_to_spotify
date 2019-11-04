@@ -3,6 +3,7 @@
    [aleph.http :as http]
    [byte-streams :as bs]
    [cheshire.core :as cheshire]
+   [clojure.data :as d]
    [clojure.string :as str]
    [clj-spotify.core :as spotify]
    [feedme]
@@ -88,11 +89,22 @@
                   (:items (spotify/get-a-playlists-tracks {:user_id     (:spotify-user-id config)
                                                            :playlist_id (:spotify-playlist-id config)
                                                            :fields      "items(track(uri))"
-                                                           :limit       (count tracks)
+                                                           :limit       (* 2 (count (:new tracks))) ;; 2x just incase
                                                            :offset      0}
                                                           token)))))
 
 
+(defn diff [tracks]
+  (-> (d/diff (set (:new tracks)) (set (:recent tracks)))
+      first))
+
+
+(defn add-tracks-to-playlist! [uris token]
+  (spotify/add-tracks-to-a-playlist {:user_id     (:spotify-user-id config)
+                                     :playlist_id (:spotify-playlist-id config)
+                                     :uris        uris
+                                     :position    0}
+                                  token))
 
 
 (defn run
@@ -102,9 +114,10 @@
     (-> (consume-html)
         parse-html
         (spotify-tracks token)
-        (recent-spotify-tracks token) ;; TODO: There is a bug where this isn't grabbing all the tracks it should
-        ;; TODO: Use `diff` to remove overlaps... but diff may be ordered so maybe not?
-        ;; TODO: Add tracks
+        (recent-spotify-tracks token)
+        (update :new #(remove nil? %))
+        diff
+        (add-tracks-to-playlist! token)
         ;; TODO: Remove old dated tracks (can/should probably happen concurrently)
         ))
   ;; TODO: What return value?
