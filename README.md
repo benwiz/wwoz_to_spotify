@@ -111,3 +111,11 @@ Spotify Search results.
 ```
 
 ## To Do
+
+- Deploy cloudwatch event cron with deploy command
+- Deploy env vars with deploy command
+- Script to clean up bucket (delete bucket)
+
+- Figure out what return value should be
+
+- Create a simple github pages with a spotify web player that can play this playlist (maybe rename project just WWOZ)
