@@ -11,6 +11,7 @@
    [hickory.core :as h]
    [hickory.select :as s]))
 
+
 (def config
   {:aws-region            "us-east-1"
    :aws-access-key-id     (System/getenv "AWS_ACCESS_KEY_ID")
@@ -20,6 +21,7 @@
    :spotify-client-secret (System/getenv "SPOTIFY_CLIENT_SECRET")
    :spotify-refresh-token (System/getenv "SPOTIFY_REFRESH_TOKEN")
    :spotify-playlist-id   "5P6WEbhcUsmXB08owijHYd"})
+
 
 (defn consume-html
   "Consume WWOZ's latest several songs played
@@ -120,7 +122,6 @@
 
 
 (defn remove-tracks-from-playlist! [tracks token]
-  (clojure.pprint/pprint tracks)
   (spotify/remove-tracks-from-a-playlist {:user_id     (:spotify-user-id config)
                                           :playlist_id (:spotify-playlist-id config)
                                           :tracks      tracks}
@@ -130,19 +131,25 @@
 (defn run []
   (let [token (spotify-token)]
     ;; Add new tracks
+    (prn "Add new tracks...")
     (-> (consume-html)
         parse-html
         (spotify-tracks token)
         (recent-spotify-tracks token)
         (update :new #(remove nil? %))
         diff
+        (doto prn)
         (add-tracks-to-playlist! token))
+    (prn "Done adding new tracks.")
 
     ;; Delete old tracks
+    (prn "Delete old tracks...")
     (-> (old-spotify-tracks token)
         :items
         (->> (map :track))
-        (remove-tracks-from-playlist! token)))
+        (doto prn)
+        (remove-tracks-from-playlist! token))
+    (prn "Done deleting old tracks."))
 
   ;; TODO: What return value?
-  )
+  nil)
