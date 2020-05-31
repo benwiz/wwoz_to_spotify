@@ -1,8 +1,16 @@
 # wwoz_to_spotify
 
+## What
+
+This cronjob manages a [Spotify playlist](https://open.spotify.com/playlist/5P6WEbhcUsmXB08owijHYd?si=qAxkhFD3Q8WRfrjBY__N2g) that reflects WWOZ's most recently played songs.
+
+## How
+
 Scrape [WWOZ's Spinitron webpage](https://spinitron.com/WWOZ/) and add all new tracks to a [Spotify playlist](https://open.spotify.com/playlist/5P6WEbhcUsmXB08owijHYd?si=qAxkhFD3Q8WRfrjBY__N2g).
 
 Keeps the most recent 100 songs and removes anything older.
+
+Deployed to AWS Lambda Function
 
 ## Notes
 
