@@ -1,5 +1,7 @@
 # wwoz_to_spotify
 
+My first Clojure project for the purpose of learning Clojure. Running without stop on AWS Lambda since 2017.
+
 ## What
 
 This cronjob manages a [Spotify playlist](https://open.spotify.com/playlist/5P6WEbhcUsmXB08owijHYd?si=qAxkhFD3Q8WRfrjBY__N2g) that reflects WWOZ's most recently played songs.
