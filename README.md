@@ -4,7 +4,7 @@ This cronjob manages a [Spotify playlist](https://open.spotify.com/playlist/5P6W
 
 ## Why
 
-This was my first Clojure project and I made it in order to learn Clojure in 2018. This cronjob has been running on AWS Lambda sincce then with an upgrade in 2019.
+This was my first Clojure project and I made it in order to learn Clojure in 2018. This cronjob has been running on AWS Lambda since then with an upgrade in 2019.
 
 ## How
 
