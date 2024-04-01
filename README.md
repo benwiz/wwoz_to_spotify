@@ -1,6 +1,6 @@
 # wwoz_to_spotify
 
-My first Clojure project for the purpose of learning Clojure. Running without stop on AWS Lambda since 2017.
+My first Clojure project for the purpose of learning Clojure. Somehow it's been running on AWS Lambda since 2017, I haven't had to touch the code or deployment once.
 
 ## What
 
